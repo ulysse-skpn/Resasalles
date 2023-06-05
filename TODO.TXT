@@ -4,3 +4,5 @@ RETIRER
     "html-loader": "^4.2.0",
     "webpack": "^5.85.0"
   }
+
+REMOVE ALL !important

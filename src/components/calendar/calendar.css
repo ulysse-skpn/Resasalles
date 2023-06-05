@@ -6,7 +6,6 @@
 .calendar-wrapper
 {
   --bs-gutter-x: 0;
-  background-color: orange;
 }
 
 .calendar-nav
@@ -33,4 +32,34 @@
 .calendar-day, .calendar-button, .calendar-label
 {
   cursor: pointer;
+}
+
+.demo
+{
+  font-size:2rem;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 0.7px;
+  -webkit-text-stroke-color: black;
+}
+
+.icons
+{
+  height: 2rem;
+}
+
+.past
+{
+  background-color: lightgray!important;
+  cursor: default;
+}
+
+.today
+{
+  background-color: rgb(250, 241, 163)!important;
+  transition: ease-in-out 300ms;
+}
+
+.today:hover
+{
+  background-color: rgb(109, 160, 243)!important;
 }
