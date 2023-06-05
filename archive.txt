@@ -1,0 +1,417 @@
+export default function Calendar()
+{
+
+    const [ currentMonth, setCurrentMonth ] = useState(new Date())
+    const [ currentYear, setCurrentYear ] = useState(new Date())
+    // // const [ selectedDate, setDate ] = useState(new Date())
+
+    function header()
+    {
+        const dateFormat = "MMMM yyyy";
+
+        return (
+            <div className="header row flex-middle">
+                <div className="col col-start" onClick={previousMonth}>
+                    <div className="icon">chevron_left</div>
+                </div>
+                <div className="col col-center">
+                    <span>{format(currentMonth, dateFormat, {locale: fr})}</span>
+                </div>
+                <div className="col col-end" onClick={nextMonth}>
+                    <div className="icon">chevron_right</div>
+                </div>
+            </div>
+        );
+    }
+
+    function calendar()
+    {
+        return(
+            // <table className="table table-bordered">
+            //     <thead className="text-center font-weight-bold">
+            //         <tr>
+            //             <th>Dim</th>
+            //             <th>Lun</th>
+            //             <th>Mar</th>
+            //             <th>Mer</th>
+            //             <th>Jeu</th>
+            //             <th>Ven</th>
+            //             <th>Sam</th>
+            //         </tr>
+            //     </thead>
+
+            //     <tbody dangerouslySetInnerHTML={{ __html: calendarCells() }} />
+            // </table>
+        )
+    }
+    
+    // function renderCells(value)
+    // {
+    //     let cell = document.createElement('td')
+    //     cell.className = "cells"
+    //     let cellText = document.createTextNode(value)
+    //     cell.appendChild(cellText)
+    //     return cell
+    // }
+
+    // function calendarCells()
+    // {
+    //     // Get the starting day of the month
+    //     let firstDay = ( new Date(currentYear, currentMonth)).getDay()
+
+    //     const table = document.createElement('table')
+    //     const tbody = document.createElement('tbody')
+
+    //     table.className = "table table-bordered"
+    //     table.innerHTML = ""
+
+    //     // Get the number of days in that month
+    //     /** 
+    //     Explanation, the function new Date(year, month, 32) returns the 32nd day after the month started. If we subtract that date from 32, we get the final day of that month. Example, If we pass feb 2018 as an argument, its ‘32nd’ day will be 4th of march, subtract 32 from 4 and we get 28, final day of the month of feb 2018
+    //     */
+
+    //     let date = 1
+
+    //     console.log(date > daysInMonth(currentMonth,currentYear))
+
+    //     for (let i = 0; i < 6; i++) 
+    //     {
+    //         let row =  document.createElement('tr')
+
+    //         // Create individual cells
+    //         for (let p = 0; p < 7; p++) 
+    //         {
+    //             if( i === 0 && p > firstDay )
+    //             {
+    //                 row.appendChild(renderCells(""))
+    //             }
+    //             else if( date > daysInMonth(currentMonth,currentYear) )
+    //             {
+    //                 break
+    //             }
+    //             else
+    //             {
+    //                 row.appendChild(renderCells(date))
+    //                 date++
+    //             }
+    //         }
+    //         tbody.appendChild(row);
+    //     }
+    //     return tbody.innerHTML
+    // }
+
+
+    // // function onDateClick (day)
+    // // {
+    // //     setDate(day);
+    // // }
+
+    function nextMonth ()
+    {
+        setCurrentMonth(addMonths(currentMonth,1))
+    }
+
+    function previousMonth ()
+    {
+        setCurrentMonth(subMonths(currentMonth,1))
+    }
+
+    function daysInMonth(month, year)
+    {
+        return 32 - new Date(year, month, 32).getDate()
+    }
+
+    return(
+        <div>
+            { header() }
+            { calendar() }
+        </div>
+    )
+}
+
+
+export default function Calendar()
+{
+
+    const [ showYearTable, setShowYearTable ] = useState( false )
+    const [ showMonthTable, setShowMonthTable ] = useState( false )
+    const [ showDateTable, setShowDateTable ] = useState( true )
+    const [ dateObject, setDateObject ] = useState( moment() )
+    const [ allMonths, setAllMonths ] = useState( moment.months() )
+    const [ selectedDay, setSelectedDay ] = useState( null )
+
+    function daysInMonth ()
+    {
+        return dateObject.daysInMonth()
+    }
+
+    function year()
+    {
+        return dateObject.format("Y")
+    }
+
+    function currentDay()
+    {
+        return dateObject.format("D")
+    }
+
+    function firstDayofMonth()
+    {
+        const date_object = dateObject
+        const firstDay = moment(date_object).startOf("month").format("d")
+        return firstDay
+    }
+
+    function month()
+    {
+        return dateObject.format("MMMM")
+    } 
+
+    function showMonth()
+    {
+        setShowMonthTable(!showMonthTable)
+        setShowDateTable(!showDateTable)
+    }
+
+    function setMonth(month)
+    {
+        const selectedMonth = allMonths.indexOf(month)
+        let date_object = Object.assign({}, dateObject)
+        date_object = moment(dateObject).set("month",month)
+        setDateObject(date_object)
+        setShowMonthTable(!showMonthTable)
+        setShowDateTable(!showDateTable)
+    }
+
+    function monthList(props)
+    {
+        const months = []
+        props.data.map( data => {
+            months.push(
+                <td key={data} className="calendar-month" onClick={(e) => { setMonth(data) }}>
+                    <span>{data}</span>
+                </td>
+            )
+        })
+
+        const rows = []
+        let cells = []
+
+        months.forEach((row, i) => {
+            if( i % 3 !== 0 || i === 0 )
+            {
+                cells.push(row)
+            }
+            else
+            {
+                rows.push(cells)
+                cells = []
+                cells.push(row)
+            }
+        })
+
+        rows.push(cells)
+
+        const monthList = rows.map((d,i) => {
+            return <tr>{d}</tr>
+        })
+
+        return(
+            <table className="calendar-month">
+                <thead>
+                    <tr>
+                        <th colSpan={4}>Choix du mois</th>
+                    </tr>
+                </thead>
+            </table>
+        )
+    }
+
+    function yearTable()
+    {
+        setShowYearTable(!showYearTable)
+        setShowDateTable(!showDateTable)
+    }
+
+    function previous()
+    {
+        let current = ''
+        if(showYearTable === true) current = "year"
+        else current = "month"
+
+        setDateObject(dateObject.subtract(1,current))
+    } 
+
+    function next()
+    {
+        let current = ''
+        if(showYearTable === true) current = "year"
+        else current = "month"
+
+        setDateObject(dateObject.add(1,current))
+    } 
+
+    function setYear(year)
+    {
+        let date_object = Object.assign({}, dateObject)
+        date_object = moment(dateObject).set("year","year")
+        setDateObject(date_object)
+        setShowMonthTable(!showMonthTable)
+        setShowYearTable(!showYearTable)
+    }
+
+    function onYearChange(e)
+    {
+        setYear(e.target.value)
+    }
+
+    function getDates(startDate, stopDate)
+    {
+        const dateArray = []
+        let currentDate = moment(startDate)
+        const _stopDate_ = moment(stopDate)
+
+        while( currentDate <= stopDate )
+        {
+            dateArray.push( moment(currentDate).format('YYYY') )
+            currentDate = moment(currentDate).add(1, "year")
+        }
+
+        return dateArray
+    }
+
+    function YearTable(props)
+    {
+        const months = []
+
+        const nextTenYear = moment().set('year', props).add("year",12).format("Y")
+
+        const tenYear = getDates(props, nextTenYear)
+
+        tenYear.map( (data) => {
+            months.push(
+                <td key={data} className="calendar-month" onClick={(e) => { setYear(data) }}>
+                    <span>{data}</span>
+                </td>
+            )
+        })
+
+        const rows = []
+        let cells = []
+
+        months.forEach( (row,i) => {
+            if( i % 3 !== 0 || i === 0)
+            {
+                cells.push(row)
+            }
+            else
+            {
+                rows.push(cells)
+                cells = []
+                cells.push(row)
+            }
+        })
+
+        rows.push(cells)
+
+        const yearList = rows.map( (d,i) => {
+            return <tr>{d}</tr>
+        })
+
+        return(
+            <table className="calendar-month">
+                <thead>
+                    <tr>
+                        <th colSpan={4}>Choix de l'année</th>
+                    </tr>
+                </thead>
+                <tbody>{yearList}</tbody>
+            </table>
+        )
+
+    }
+
+    function onDayClick(day)
+    {
+        setSelectedDay(day)
+    }
+
+    function render()
+    {
+        const weekDays = moment.weekdaysShort().map( day => {
+            return <th key={day}>{day}</th>
+        })
+
+        const blanks = []
+
+        for (let i = 0; i < firstDayofMonth(); i++) 
+        {
+            blanks.push(<td className="calendar-day empty">{""}</td>)
+        }
+
+        const daysInMonth = []
+
+        for (let p = 1; p <= daysInMonth(); p++) 
+        {
+            const current_day = (p) === currentDay() ? "Today" : ""
+
+            daysInMonth.push(
+                <td key={p} className={`calendar-day ${current_day}`}>
+                    <span onClick={(e) => { onDayClick(e,p) }}>{p}</span>
+                </td>
+            )
+        }
+        const totalSlots = [ ...blanks, ...daysInMonth]
+        const rows = []
+        let cells = []
+
+        totalSlots.forEach( (row,i) => {
+            if( i % 7 !== 0 )
+            {
+                cells.push(row)
+            }
+            else
+            {
+                row.push(cells)
+                cells = []
+                cells.push(row)
+            }
+
+            if( i === totalSlots.length -1 )
+            {
+                rows.push(cells)
+            }
+        })
+
+        const days_in_month = rows.map((day,i) => {
+            return <tr>{day}</tr>
+        })
+
+        return(
+            <div>
+                <div className="calendar-nav">
+                    <span className="calendar-button previous-button" onClick={(e) => previous() }></span>
+                    <span className="calendar-label" onClick={(e) => showMonth() }></span>
+                    <span className="calendar-label" onClick={(e) => showYearTable() }></span>
+                    <span className="calendar-button next-button" onClick={(e) => next() }></span>
+                </div>
+
+                <div className="calendar-date">
+                    { showYearTable && <YearTable props={ year() }/>}
+                    { showMonthTable && (< monthList data={moment.months()}/> )}
+                </div>
+
+                { showDateTable && (
+                    <div className="calendar-date">
+                        <table className="calendar-day">
+                            <thead>
+                                <tr>{ weekDays }</tr>
+                            </thead>
+                            <tbody>{ days_in_month }</tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        )
+    }
+}

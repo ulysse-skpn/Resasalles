@@ -1,0 +1,36 @@
+*
+{
+  box-sizing: border-box;
+}
+
+.calendar-wrapper
+{
+  --bs-gutter-x: 0;
+  background-color: orange;
+}
+
+.calendar-nav
+{
+  height: 3rem;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.calendar-day
+{
+  height: 100px;
+}
+
+.calendar-day:hover
+{
+  transition: ease-in-out 200ms;
+  background-color: aliceblue;
+}
+
+.calendar-day, .calendar-button, .calendar-label
+{
+  cursor: pointer;
+}
